@@ -1,45 +1,40 @@
 // App.js
-
-import React, { useState } from "react";
-import axios from "axios";
-import JournalInput from "./components/JournalInput";
-import SentimentResults from "./components/SentimentResults";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { GlobalStyles } from "./styles/GlobalStyles";
-import Navbar from "./components/Navbar";
 import styled from "styled-components";
+import JournalPage from "./pages/JournalPage";
+import HomePage from "./pages/HomePage";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
-const TitleStyle = styled.h1`
-  margin-top: 2rem;
-  font-family: 'Josefin Sans', sans-serif;
-  font-size: 2rem;
-  color:rgb(0, 0, 0);
+const Layout = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`;
 
-`
+const Content = styled.main`
+  flex: 1;
+`;
 
 function App() {
-  const [results, setResults] = useState([]);
-
-  const analyzeEntry = async (entry) => {
-    try {
-      const res = await axios.post("http://localhost:8000/analyze", { entry });
-      setResults(res.data.results);
-    } catch (err) {
-      console.error("Failed to analyze jounral entry:", err);
-    }
-  };
-
   return (
     <>
-    <GlobalStyles />
-    <Navbar/>
-    <div style={{ textAlign: "center", margin: "1rem" }}>
-      <TitleStyle>Journal Sentiment Analyzer</TitleStyle>
-    </div>
-
-      <div>
-        <JournalInput onSubmit={analyzeEntry} />
-        {results.length > 0 && <SentimentResults results={results} />}
-      </div>
+      <GlobalStyles />
+      <Layout>
+        <Navbar />
+        <Content>
+          <Router>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/home" element={<HomePage />} />
+              <Route path="/journal" element={<JournalPage />} />
+            </Routes>
+          </Router>
+        </Content>
+        <Footer />
+      </Layout>
     </>
   );
 }
