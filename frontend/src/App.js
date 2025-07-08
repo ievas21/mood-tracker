@@ -5,6 +5,9 @@ import { GlobalStyles } from "./styles/GlobalStyles";
 import styled from "styled-components";
 import JournalPage from "./pages/JournalPage";
 import HomePage from "./pages/HomePage";
+import ProfilePage from "./pages/ProfilePage";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
@@ -30,6 +33,9 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/home" element={<HomePage />} />
               <Route path="/journal" element={<JournalPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
             </Routes>
           </Router>
         </Content>

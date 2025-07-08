@@ -1,0 +1,156 @@
+// src/pages/SignupPage.jsx
+import React, { useState } from 'react';
+
+export default function SignupPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
+        padding: '2rem 0',
+      }}
+    >
+    <br></br>
+      <h1 style={{ marginBottom: '2rem', fontSize: '2rem' }}>Create an Account</h1>
+
+      <form
+        onSubmit={(e) => {e.preventDefault();}}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem',
+          width: '300px',
+        }}
+      >
+
+        {/* Email Field */}
+        <div>
+          <label htmlFor="email" style={{ display: 'block', marginBottom: '0.5rem' }}>
+            Email:
+          </label>
+          <input
+            type="text"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '0.5rem',
+              borderRadius: '4px',
+              border: '1px solid #ccc',
+            }}
+            required
+          />
+        </div>
+        {/* First Name FIeld */}
+        <div>
+          <label htmlFor="firstName" style={{ display: 'block', marginBottom: '0.5rem' }}>
+            First Name:
+          </label>
+          <input
+            type="text"
+            id="firstName"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '0.5rem',
+              borderRadius: '4px',
+              border: '1px solid #ccc',
+            }}
+            required
+          />
+        </div>
+
+
+        {/* Last Name FIeld */}
+        <div>
+          <label htmlFor="lastName" style={{ display: 'block', marginBottom: '0.5rem' }}>
+            Last Name:
+          </label>
+          <input
+            type="text"
+            id="lastName"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '0.5rem',
+              borderRadius: '4px',
+              border: '1px solid #ccc',
+            }}
+            required
+          />
+        </div>
+
+        {/* Password Field */}
+        <div>
+          <label htmlFor="password" style={{ display: 'block', marginBottom: '0.5rem' }}>
+            Password:
+          </label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '0.5rem',
+              borderRadius: '4px',
+              border: '1px solid #ccc',
+            }}
+            required
+          />
+        </div>
+
+        {/* Re-Type Password Field */}
+        <div>
+          <label htmlFor="confirmPassword" style={{ display: 'block', marginBottom: '0.5rem' }}>
+            Re-Type Password:
+          </label>
+          <input
+            type="password"
+            id="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '0.5rem',
+              borderRadius: '4px',
+              border: '1px solid #ccc',
+            }}
+            required
+          />
+        </div>
+
+        {/* Sign Up Button */}
+        <button
+          type="submit"
+          style={{
+            padding: '0.75rem',
+            borderRadius: '4px',
+            backgroundColor: 'rgb(160, 194, 172)',
+            color: 'black',
+            border: 'none',
+            cursor: 'pointer',
+            fontFamily: 'Josefin Sans, sans-serif',
+            fontSize: '1rem',
+            transition: 'scale 0.2s ease-in-out',
+          }}
+        >
+          Sign Up
+        </button>
+      </form>
+    </div>
+  );
+}
+

@@ -56,7 +56,7 @@ const AboutDiv = styled.div`
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  background-color: rgba(238, 233, 233, 0.34);
+  background: linear-gradient(135deg,rgb(194, 228, 198),rgb(207, 226, 230));
   border-radius: 12px;
   width: 50%;
   margin: 2rem auto;
@@ -73,7 +73,7 @@ const Button = styled.button`
   font-size: 1.1rem;
   underline: none;
   cursor: pointer;
-  background-color:rgba(221, 238, 223, 0.35);
+  background-color:rgba(226, 237, 227, 0.73);
   margin-bottom: 1rem;
   padding: 1rem 1.5rem;
   transition: background-color 0.3s ease;
@@ -102,7 +102,7 @@ function HomePage() {
         <Hero>
           <HeroTitle>Reflect. Analyze. Grow.</HeroTitle>
           <HeroSubtitle>
-            Uncover the emotional trends in your journal with the power of ML.
+            Uncover the emotional trends in your journal with the power of NLP.
           </HeroSubtitle>
         </Hero>
         <CarouselContainer>

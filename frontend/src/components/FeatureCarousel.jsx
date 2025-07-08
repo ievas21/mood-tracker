@@ -13,12 +13,14 @@ const SquareSwiper = styled.div`
   height: 300px;
   margin: 0 auto;
   margin-bottom: 2rem;
+  
 
   .swiper {
     width: 100%;
     height: 100%;
     border-radius: 16px;
     margin-bottom: 2rem;
+    
   }
 
   .swiper-slide {
@@ -26,6 +28,7 @@ const SquareSwiper = styled.div`
     align-items: center;
     justify-content: center;
     font-size: 1.3rem;
+    
 
     }   
 `;
@@ -51,21 +54,21 @@ function FeatureCarousel() {
             }}
         >
         <SwiperSlide>
-            <div style={{ padding: "2rem", background: "rgba(238, 233, 233, 0.34)", borderRadius: "10px" }}>
+            <div style={{ padding: "2rem", background: "linear-gradient(135deg,rgb(194, 228, 198),rgb(207, 226, 230))", borderRadius: "10px" }}>
             <h3>☀️ Sentiment Analysis</h3>
             <br></br>
             <p>Analyze how your journal entry feels using advanced NLP models.</p>
             </div>
         </SwiperSlide>
         <SwiperSlide>
-            <div style={{ padding: "2rem", background: "rgba(238, 233, 233, 0.34)", borderRadius: "10px" }}>
+            <div style={{ padding: "2rem", background: "linear-gradient(135deg,rgb(194, 228, 198),rgb(207, 226, 230))", borderRadius: "10px" }}>
             <h3>📈 Mood Trends</h3>
             <br></br>
             <p>Track your emotional trends over time and gain insight into patterns.</p>
             </div>
         </SwiperSlide>
         <SwiperSlide>
-            <div style={{ padding: "2rem", background: "rgba(238, 233, 233, 0.34)", borderRadius: "10px" }}>
+            <div style={{ padding: "2rem", background: "linear-gradient(135deg,rgb(194, 228, 198),rgb(207, 226, 230))", borderRadius: "10px" }}>
             <h3>🔒 Privacy First</h3>
             <br></br>
             <p>Your journal entries are saved safely — just for you, and only you.</p>

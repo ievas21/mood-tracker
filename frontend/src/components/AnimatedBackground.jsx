@@ -8,7 +8,7 @@ const gradient = keyframes`
 `;
 
 const Background = styled.div`
-  background: linear-gradient(90deg, #A4BAF5,rgb(175, 212, 171),rgb(229, 230, 201));
+  background: linear-gradient(90deg, #A4BAF5,rgb(161, 209, 197), #A4BAF5);
   background-size: 300% 300%;
   animation: ${gradient} 4s alternate infinite;
   position: absolute;

@@ -74,7 +74,7 @@ function Navbar() {
             <Link href="/">Login</Link>
         </ListItem>
         <ListItem>
-            <Link href="/">Signup</Link>
+            <Link href="/signup">Signup</Link>
         </ListItem>
       </ul>
     </Nav>
