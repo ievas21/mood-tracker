@@ -1,7 +1,37 @@
 // src/pages/SignupPage.jsx
 import React, { useState } from 'react';
+import styled from 'styled-components';
 
-export default function SignupPage() {
+const SignButton = styled.button`
+  padding: 0.5rem 1rem;
+  color: black;
+  border-radius: 4px;
+  border: none;
+  text-decoration: none;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1rem;
+  underline: none;
+  cursor: pointer;
+  background-color:rgb(160, 194, 172);
+  padding: 0.75rem;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: rgb(207, 223, 212);
+  }
+
+  &:visited {
+    color: white;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+`
+
+function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -133,24 +163,15 @@ export default function SignupPage() {
         </div>
 
         {/* Sign Up Button */}
-        <button
+        <SignButton
           type="submit"
-          style={{
-            padding: '0.75rem',
-            borderRadius: '4px',
-            backgroundColor: 'rgb(160, 194, 172)',
-            color: 'black',
-            border: 'none',
-            cursor: 'pointer',
-            fontFamily: 'Josefin Sans, sans-serif',
-            fontSize: '1rem',
-            transition: 'scale 0.2s ease-in-out',
-          }}
         >
           Sign Up
-        </button>
+        </SignButton>
       </form>
     </div>
   );
 }
+
+export default SignupPage;
 
