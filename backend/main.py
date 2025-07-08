@@ -19,6 +19,8 @@ bert_classifier = pipeline("sentiment-analysis")
 # VADER instance
 vader_analyzer = SentimentIntensityAnalyzer()
 
+@app/post("/signup")
+
 @app.post("/analyze", response_model=AnalysisResponse)
 def analyze(entry: Entry):
     text = entry.entry
