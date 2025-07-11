@@ -1,6 +1,5 @@
 # backend/main.py
-
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from pydantic import BaseModel
 
 from schemas.analyze import Entry, Result, AnalysisResponse
@@ -11,7 +10,39 @@ from transformers import pipeline
 
 from fastapi.middleware.cors import CORSMiddleware
 
+from schema import SignupRequest
+from auth import signup_user
+from fastapi import HTTPException
+
+from auth import hash_pwd
+from dotenv import load_dotenv
+
+from db import SessionLocal
+from sqlalchemy.orm import Session
+from models import User, Base
+from db import engine
+
+load_dotenv()
+
+Base.metadata.create_all(bind=engine)
 app = FastAPI()
+
+# CORS middleware to allow requests from the frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[    "http://localhost:3000",
+                        "http://192.168.1.230:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 # load HuggingFace sentiment pipeline (only once at startup)
 bert_classifier = pipeline("sentiment-analysis")
@@ -19,7 +50,36 @@ bert_classifier = pipeline("sentiment-analysis")
 # VADER instance
 vader_analyzer = SentimentIntensityAnalyzer()
 
-@app/post("/signup")
+# define the api endpoint for user signup
+@app.post("/signup")
+def signup(data: SignupRequest, db: Session = Depends(get_db)):
+    """
+        This endpoint allows users to sign up by providing their email, first name, last name, password, and confirm password.
+        It validates the input, checks if the passwords match, and then calls the signup_user function to create a new user.
+        It returns a 400 error if the passwords do not match or if there is an error creating the user.
+    """
+    # confirm that the password and confirm_password fields match
+    if data.password != data.confirmPassword:
+        raise HTTPException(status_code=400, detail="Passwords do not match")
+    
+    # check to ensure that the user does not already exist in the database
+    existing_user = db.query(User).filter(User.email == data.email).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="User already exists")
+
+    # has the password and create a new user in the database
+    hashed_pw = hash_pwd(data.password)
+    new_user = User(
+        email=data.email,
+        first_name=data.firstName,
+        last_name=data.lastName,
+        hashed_password=hashed_pw
+    )
+
+    # add the new user to the database session and commit the changes
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
 
 @app.post("/analyze", response_model=AnalysisResponse)
 def analyze(entry: Entry):
@@ -65,12 +125,3 @@ def classify_label(score: float) -> str:
         return "Negative"
     else:
         return "Neutral"
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-

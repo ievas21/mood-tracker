@@ -38,6 +38,40 @@ function SignupPage() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
 
+  const handleSignup = async (e) => {
+  e.preventDefault();
+
+  const payload = {
+    email,
+    firstName,
+    lastName,
+    password,
+    confirmPassword,
+  };
+
+  try {
+    const res = await fetch("http://localhost:8000/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert("Signup successful!");
+      // Redirect or reset form here
+    } else {
+      alert(`Signup failed: ${data.detail}`);
+    }
+  } catch (err) {
+    alert("Error occurred during signup.");
+    console.error(err);
+  }
+};
+
   return (
     <div
       style={{
@@ -102,7 +136,7 @@ function SignupPage() {
         </div>
 
 
-        {/* Last Name FIeld */}
+        {/* Last Name Field */}
         <div>
           <label htmlFor="lastName" style={{ display: 'block', marginBottom: '0.5rem' }}>
             Last Name:
@@ -165,6 +199,7 @@ function SignupPage() {
         {/* Sign Up Button */}
         <SignButton
           type="submit"
+          onClick={handleSignup}
         >
           Sign Up
         </SignButton>
