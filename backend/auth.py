@@ -6,38 +6,13 @@ from datetime import datetime, timedelta
 import os
 from dotenv import load_dotenv
 from datetime import datetime, timedelta, timezone
+import bcrypt
 
 load_dotenv()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30))
-
-def signup_user(email: str, password: str, first_name: str, last_name: str):
-    '''
-    Signs up a new user by creating an account in the Supabase database.
-    Inputs:
-        - email: User's email address
-        - password: User's password
-        - first_name: User's first name
-        - last_name: User's last name
-    '''
-    result = supabase.auth.sign_up({
-        "email": email,
-        "password": password,
-        "options": {
-            "data": {
-                "first_name": first_name,
-                "last_name": last_name
-            }
-        }
-    })
-
-    if result.get("error"):
-        raise HTTPException(status_code=400, detail=result["error"]["message"])
-    
-    return result
-
 
 # creates a password hashing object uses bcrypt as the password hashing algorithm (and re-hashes old passwords when a user logs in)
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -65,7 +40,7 @@ def verify_pwd(plain_password: str, hashed_password: str):
     Returns:
         - bool: True if the password matches, False otherwise
     '''
-    return pwd_context.verify(plain_password, hashed_password)
+    return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8"))
 
 def create_access_token(data: dict, expires_delta: timedelta = None):
     '''

@@ -62,7 +62,7 @@ function SignupPage() {
 
     if (res.ok) {
       alert("Signup successful!");
-      // Redirect or reset form here
+      window.location.href = "/login";
     } else {
       alert(`Signup failed: ${data.detail}`);
     }

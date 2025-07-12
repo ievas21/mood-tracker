@@ -10,14 +10,15 @@ from transformers import pipeline
 
 from fastapi.middleware.cors import CORSMiddleware
 
-from schema import SignupRequest
-from auth import signup_user
+from schema import SignupRequest, LoginRequest, UserResponse
+from auth import verify_pwd
+from dependencies import get_current_user
 from fastapi import HTTPException
 
-from auth import hash_pwd
+from auth import hash_pwd, create_access_token
 from dotenv import load_dotenv
 
-from db import SessionLocal
+from db import SessionLocal, get_db
 from sqlalchemy.orm import Session
 from models import User, Base
 from db import engine
@@ -36,13 +37,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 # load HuggingFace sentiment pipeline (only once at startup)
 bert_classifier = pipeline("sentiment-analysis")
@@ -80,6 +74,57 @@ def signup(data: SignupRequest, db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+
+@app.post("/login")
+async def login(user: LoginRequest, db: Session = Depends(get_db)):
+    """
+        API endpoint to allow users to log in by providing their email and password.
+        It retrieves the user from the database and verifies the password.
+        If the user does not exist or the password is incorrect, it raises a 400 error.
+
+        Inputs:
+            - user: LoginRequest object containing email and password.
+        Outputs:
+            - access_token: A JWT access token if the login is successful.
+            - token_type: The type of token, which is "bearer".
+    """
+    # check if the email and password has been inputted
+    if not user.email or not user.password:
+        raise HTTPException(
+            status_code=400, detail="Email and password are required.")
+    
+    # retrieve the user from the database using the email provided in the request
+    existing_user = db.query(User).filter(User.email == user.email).first()
+
+    #  if the user does not exist, raise an HTTPException with a 400 status code
+    if not existing_user:
+        raise HTTPException(status_code=400, detail="Please create an account to continue.")
+
+    # verify the password against the stored hashed password
+    if not verify_pwd(user.password, existing_user.hashed_password):
+        raise HTTPException(status_code=400, detail="Incorrect password inputted. Please try again.")
+    
+    token = create_access_token(data={"sub": existing_user.email})
+
+    return {
+        "access_token": token,
+        "token_type": "bearer"
+    }
+
+@app.get("/profile", response_model=UserResponse)
+def read_current_user(current_user: User = Depends(get_current_user)):
+    '''
+    Uses FastAPI's Depends() system to automatically inject the currently 
+    authenticated user via the get_current_user() function.
+
+    Input:
+        - current_user: User model instance that is automatically fetched from the decoded 
+        JWT and matched in the DB
+
+    Returns:
+        - email: returns user details (name and email)
+    '''
+    return current_user
 
 @app.post("/analyze", response_model=AnalysisResponse)
 def analyze(entry: Entry):

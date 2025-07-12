@@ -68,7 +68,7 @@ function Navbar() {
           <Link href="/">Home</Link>
         </ListItem>
         <ListItem>
-            <Link href="/">Profile</Link>
+            <Link href="/profile">Profile</Link>
         </ListItem>
         <ListItem>
             <Link href="/login">Login</Link>

@@ -35,6 +35,37 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const handleLogin= async (e) => {
+  e.preventDefault();
+
+  const payload = {
+    email,
+    password,
+  };
+
+  try {
+    const res = await fetch("http://localhost:8000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      localStorage.setItem("access_token", data.access_token);
+      window.location.href = "/profile";
+    } else {
+      alert(`Signup failed: ${data.detail}`);
+    }
+  } catch (err) {
+    alert("Error occurred during login.");
+    console.error(err);
+  }
+};
+
   return (
     <div
       style={{
@@ -103,6 +134,7 @@ function LoginPage() {
         {/* Submit Button */}
         <LoginButton
           type="submit"
+          onClick={handleLogin}
         >
           Log in
         </LoginButton>
