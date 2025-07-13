@@ -11,20 +11,84 @@ const ProfileImg = styled.img`
 `;
 
 const ProfileTitle = styled.h1`
+  margin-top: 0.5rem;
   margin-bottom: 0.5rem;
   font-size: 2rem;
   text-align: center;
-  position: sticky;
-  top: 0;
   padding: 1rem;
-  z-index: 1000;
-
 `;
 
 const ProfileSubtitle = styled.h2`
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   text-align: center;
   margin-bottom: 1rem;
+  font-weight: light;
+`;
+
+const ProfileContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 4rem;
+  width: 100%;
+  padding: 2rem;
+
+`;
+
+const JournalEntriesContainer = styled.div`
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 600px;
+  background-color: rgba(199, 231, 195, 0.8);
+  padding: 1rem;
+  border-radius: 8px;
+  height: fit-content;
+
+`;
+
+const ProfileInformation = styled.div`
+  display: flex,
+  flexDirection: column,
+  alignItems: center,
+  justifyContent: center,
+  height: calc(100vh - 120px),
+  padding: 2rem 0,
+`;
+
+const JournalButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  color: black;
+  border-radius: 4px;
+  border: none;
+  text-decoration: none;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1rem;
+  underline: none;
+  cursor: pointer;
+  background-color:rgb(160, 194, 172);
+  padding: 0.75rem;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: rgb(207, 223, 212);
+  }
+
+  &:visited {
+    color: white;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
 `;
 
 function ProfilePage() {
@@ -70,43 +134,59 @@ function ProfilePage() {
   if (error) return <div style={{ color: 'red' }}>{error}</div>;
 
   return (
-    <div       
-    style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: 'calc(100vh - 120px)',
-        padding: '2rem 0',
-      }}>
+    <>
+    <ProfileTitle>Profile Page</ProfileTitle>
+    <ProfileSubtitle>
+      {isLoggedIn && user
+        ? `Welcome back, ${user.first_name}!`
+        : 'Please log in to view your profile.'}
+    </ProfileSubtitle>
 
-      <ProfileTitle style={{ marginBottom: '0.5rem', fontSize: '2rem' }}>Profile Page</ProfileTitle>
-      <ProfileSubtitle>
-        {isLoggedIn ? `Welcome back, ${user.first_name}!` : 'Please log in to view your profile.'}
-      </ProfileSubtitle>
-
-      {isLoggedIn ? (
-        <div>
-          <ProfileImg
-            src="user_icon.jpg"
-            alt="Profile"
-            style={{ borderRadius: '50%', marginBottom: '1rem' }}>
-
-          </ProfileImg>
-          {user ? (
+    <ProfileContainer>
+        <ProfileInformation>
+          {isLoggedIn ? (
             <div>
-              <p>Email: {user.email}</p>
-              <p>First Name: {user.first_name}</p>
-              <p>Last Name: {user.last_name}</p>
+              {user ? (
+                <div>
+                  <ProfileImg
+                    src="user_icon.jpg"
+                    alt="Profile"
+                    style={{ borderRadius: '50%', marginBottom: '1rem' }}>
+                  </ProfileImg>
+                  <p style={{marginLeft: "2rem"}}>{user.first_name} {user.last_name}</p>
+                </div>
+              ) : (
+                <p>Loading user information...</p>
+              )}
             </div>
           ) : (
-            <p>Loading user information...</p>
+            <p>Please log in to view your profile.</p>
           )}
-        </div>
-      ) : (
-        <p>Please log in to view your profile.</p>
-      )}
-    </div>
+        </ProfileInformation>
+
+        <JournalEntriesContainer>
+          {user?.entries?.length > 0 ? (
+            user.entries.map((entry) => (
+              <div key={entry.id} style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                <h3 style={{ marginBottom: '0.5rem' }}>{entry.title}</h3>
+                <p style={{ color: 'gray', fontSize: '0.9rem' }}>
+                  {new Date(entry.created_at).toLocaleDateString(undefined, {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </p>
+              </div>
+            ))
+          ) : (
+            <p style={{marginBottom: '0.5rem'}}>You have no journal entries yet.</p>
+          )}
+          <JournalButton>
+            <a href="/user_entry">Create New Entry</a>
+          </JournalButton>
+        </JournalEntriesContainer>
+      </ProfileContainer>
+    </>
   );
 }
 

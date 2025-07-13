@@ -20,7 +20,8 @@ from dotenv import load_dotenv
 
 from db import SessionLocal, get_db
 from sqlalchemy.orm import Session
-from models import User, Base
+from sqlalchemy import desc
+from models import User, Base, JournalEntry
 from db import engine
 
 load_dotenv()
@@ -111,8 +112,8 @@ async def login(user: LoginRequest, db: Session = Depends(get_db)):
         "token_type": "bearer"
     }
 
-@app.get("/profile", response_model=UserResponse)
-def read_current_user(current_user: User = Depends(get_current_user)):
+@app.get("/profile")
+def read_current_user(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     '''
     Uses FastAPI's Depends() system to automatically inject the currently 
     authenticated user via the get_current_user() function.
@@ -124,7 +125,21 @@ def read_current_user(current_user: User = Depends(get_current_user)):
     Returns:
         - email: returns user details (name and email)
     '''
-    return current_user
+    entries = db.query(JournalEntry).filter(current_user.id == JournalEntry.user_id).order_by(desc(JournalEntry.created_at)).all()
+
+    return {
+        "email": current_user.email,
+        "first_name": current_user.first_name,
+        "last_name": current_user.last_name,
+        "entries": [
+            {
+                "id": entry.id,
+                "title": entry.title,
+                "created_at": entry.created_at,
+                "mood_score": entry.mood_score
+            } for entry in entries
+        ]
+    }
 
 @app.post("/analyze", response_model=AnalysisResponse)
 def analyze(entry: Entry):
