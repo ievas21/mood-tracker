@@ -97,6 +97,9 @@ function Navbar() {
         ) : 
           <>
             <ListItem>
+              <Link href="/journal">Journal</Link>
+            </ListItem>
+            <ListItem>
                 <Link href="/login">Login</Link>
             </ListItem>
             <ListItem>

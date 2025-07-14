@@ -1,4 +1,4 @@
-/* src/components/JournalInput.jsx */
+/* src/components/UserJournalInput.jsx */
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -8,6 +8,7 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
     margin: 2rem;
     margin-bottom: 1rem;
     padding: 1rem;
@@ -18,6 +19,7 @@ const JournalText = styled.textarea`
     padding: 0.8rem;
     font-family: 'Josefin Sans', sans-serif;
     font-size: 1rem;
+    margin-bottom: 1rem;
 
 `
 const AnalyzeButton = styled.button`
@@ -78,7 +80,7 @@ const ResetButton = styled.button`
 
 `
 
-function JournalInput({ onSubmit }) {
+function UserJournalInput({ onSubmit }) {
   const [entry, setEntry] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [results, setResults] = useState([]);
@@ -115,18 +117,23 @@ function JournalInput({ onSubmit }) {
 
   return (
     <>
-      <Container>
+        <Container>
             <JournalText
-              rows="15"
-              cols="80"
-              placeholder="Write your journal entry here..."
-              value={entry}
-              onChange={(e) => setEntry(e.target.value)}
-          />
+                rows="1"
+                cols="80"
+                placeholder="Title your journal entry here..."
+            />
+            <JournalText
+                rows="15"
+                cols="80"
+                placeholder="Write your journal entry here..."
+                value={entry}
+                onChange={(e) => setEntry(e.target.value)}
+            />
       </Container>
 
-      <div style= {{ textAlign: "center" }}>
-          <AnalyzeButton onClick={handleSubmit} style={{ marginTop: "1rem", }}>
+      <div style= {{ textAlign: "center", marginBottom: "2rem" }}>
+          <AnalyzeButton onClick={handleSubmit} style={{ marginTop: "1rem" }}>
             Analyze Entry
           </AnalyzeButton>
           <ResetButton onClick={() => setEntry("")} style={{ marginTop: "1rem", marginLeft: "1rem" }}>
@@ -145,4 +152,4 @@ function JournalInput({ onSubmit }) {
   );
 }
 
-export default JournalInput;
+export default UserJournalInput;

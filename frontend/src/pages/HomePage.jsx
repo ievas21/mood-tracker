@@ -114,7 +114,7 @@ function HomePage() {
             <br></br>
             <br></br>
             <Button>
-              <a href="/journal">Start Journaling</a>
+              <a href="/journal">Start Journaling!</a>
             </Button>
           </AboutDiv>
           <FeatureCarousel />

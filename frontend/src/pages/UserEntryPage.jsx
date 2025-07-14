@@ -1,13 +1,14 @@
-// JournalPage.jsx
+// src/pages/UserJournalPage.jsx
 
 import React, { useState } from "react";
 import axios from "axios";
-import JournalInput from "../components/JournalInput";
+import UserJournalInput from "../components/UserJournalInput";
 import SentimentResults from "../components/SentimentResults";
 import styled from "styled-components";
 
 const TitleStyle = styled.h1`
   margin-top: 2rem;
+  margin-bottom: 0;
   font-family: 'Josefin Sans', sans-serif;
   font-size: 2rem;
   color:rgb(0, 0, 0);
@@ -28,12 +29,12 @@ function UserEntryPage() {
 
   return (
     <>
-    <div style={{ textAlign: "center", margin: "1rem" }}>
+    <div style={{ textAlign: "center" }}>
       <TitleStyle>Journal Sentiment Analyzer</TitleStyle>
     </div>
 
       <div>
-        <JournalInput onSubmit={analyzeEntry} />
+        <UserJournalInput onSubmit={analyzeEntry} />
         {results.length > 0 && <SentimentResults results={results} />}
       </div>
     </>
