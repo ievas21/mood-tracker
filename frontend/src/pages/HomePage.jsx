@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import FeatureCarousel from "../components/FeatureCarousel";
 import AnimatedBackground from "../components/AnimatedBackground";
@@ -95,6 +95,22 @@ const Button = styled.button`
 `
 
 function HomePage() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+      const fetchUser = async () => {
+        const token = localStorage.getItem('access_token');
+        console.log("TOKEN:", token);
+        if (!token) {
+          setIsLoggedIn(false);
+          return;
+        }
+        setIsLoggedIn(true);
+      
+      }
+      fetchUser();
+  }, []);
+
   return (
     <>
      <AnimatedBackground />
@@ -113,9 +129,15 @@ function HomePage() {
             </AboutText>
             <br></br>
             <br></br>
-            <Button>
-              <a href="/journal">Start Journaling!</a>
-            </Button>
+            { isLoggedIn ? (
+              <Button>
+                <a href="/user_entry">Start Journaling!</a>
+              </Button>
+            ):
+              <Button>
+                <a href="/journal">Start Journaling!</a>
+              </Button>
+            }
           </AboutDiv>
           <FeatureCarousel />
         </CarouselContainer>

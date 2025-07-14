@@ -28,7 +28,7 @@ function JournalPage() {
 
   return (
     <>
-    <div style={{ textAlign: "center", margin: "1rem" }}>
+    <div style={{ textAlign: "center", margin: "1rem", marginBottom: '0rem' }}>
       <TitleStyle>Journal Sentiment Analyzer</TitleStyle>
     </div>
 

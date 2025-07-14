@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
+import CustomToolTip from "./CustomTooltip";
 
 const Container = styled.div`
     display: flex;
@@ -111,7 +112,6 @@ function UserJournalInput({ onSubmit }) {
   const handleSubmit = () => {
     if (entry.trim()) {
       onSubmit(entry);
-      setEntry("");
     }
   };
 
@@ -132,6 +132,7 @@ function UserJournalInput({ onSubmit }) {
             />
       </Container>
 
+
       <div style= {{ textAlign: "center", marginBottom: "2rem" }}>
           <AnalyzeButton onClick={handleSubmit} style={{ marginTop: "1rem" }}>
             Analyze Entry
@@ -147,6 +148,7 @@ function UserJournalInput({ onSubmit }) {
               </ResetButton>
             </>
             )}
+            <CustomToolTip></CustomToolTip>
       </div>
     </>
   );
