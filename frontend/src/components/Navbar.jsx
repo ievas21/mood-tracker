@@ -1,5 +1,5 @@
 // src/components/Navbar.jsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const Nav = styled.nav`
@@ -56,6 +56,21 @@ const LinkTitle = styled.a`
 `;
 
 function Navbar() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+      const fetchUser = async () => {
+        const token = localStorage.getItem('access_token');
+        console.log("TOKEN:", token);
+        if (!token) {
+          setIsLoggedIn(false);
+          return;
+        }
+        setIsLoggedIn(true);
+      
+      }
+      fetchUser();
+  }, []);
 
   return (
     <Nav>
@@ -67,15 +82,28 @@ function Navbar() {
         <ListItem>
           <Link href="/">Home</Link>
         </ListItem>
-        <ListItem>
-            <Link href="/profile">Profile</Link>
-        </ListItem>
-        <ListItem>
-            <Link href="/login">Login</Link>
-        </ListItem>
-        <ListItem>
-            <Link href="/signup">Signup</Link>
-        </ListItem>
+        { isLoggedIn ? (
+          <>
+            <ListItem>
+                <Link href="/profile">Profile</Link>
+            </ListItem>
+            <ListItem>
+              <Link href="/user_entry">Journal</Link>
+            </ListItem>
+            <ListItem>
+              <Link href="/logout">Logout</Link>
+            </ListItem>
+          </>
+        ) : 
+          <>
+            <ListItem>
+                <Link href="/login">Login</Link>
+            </ListItem>
+            <ListItem>
+                <Link href="/signup">Signup</Link>
+            </ListItem>
+          </>
+        }
       </ul>
     </Nav>
   );

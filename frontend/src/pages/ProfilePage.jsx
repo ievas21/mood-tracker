@@ -179,7 +179,7 @@ function ProfilePage() {
               </div>
             ))
           ) : (
-            <p style={{marginBottom: '0.5rem'}}>You have no journal entries yet.</p>
+            <p style={{marginBottom: '1rem'}}>You have no journal entries yet.</p>
           )}
           <JournalButton>
             <a href="/user_entry">Create New Entry</a>
