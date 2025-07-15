@@ -83,6 +83,7 @@ const ResetButton = styled.button`
 
 function UserJournalInput({ onSubmit }) {
   const [entry, setEntry] = useState("");
+  const [title, setTitle] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [results, setResults] = useState([]);
 
@@ -91,7 +92,7 @@ function UserJournalInput({ onSubmit }) {
       const res = await axios.post("http://localhost:8000/analyze", { entry });
       setResults(res.data.results);
     } catch (err) {
-      console.error("Failed to analyze jounral entry:", err);
+      console.error("Failed to analyze journal entry:", err);
     }
   };
 
@@ -109,11 +110,56 @@ function UserJournalInput({ onSubmit }) {
     fetchUser();
   }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (entry.trim()) {
-      onSubmit(entry);
+      await analyzeEntry(entry);
+      onSubmit(entry); 
     }
   };
+
+  const handleSave = async () => {
+  const token = localStorage.getItem("access_token");
+
+  if (!results.length) {
+    alert("Please analyze the entry before saving!");
+    return;
+  }
+
+  const primaryResult = results[2];
+  const moodScore = primaryResult.score;
+  const moodLabel = primaryResult.label;
+
+  try {
+    const response = await fetch("http://localhost:8000/user_entry", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        title: title,
+        content: entry,
+        mood_score: `${moodLabel} (${(moodScore * 100).toFixed(1)}%)`
+      })
+    });
+
+    if (!response.ok) throw new Error("Failed to save entry.");
+    const data = await response.json();
+    console.log("Saved entry:", data);
+    setEntry("");
+    setTitle("");
+    setResults([]);
+    window.location.href = "/profile";
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+  const handleReset = () => {
+    setEntry("")
+    setTitle("")
+    setResults([])
+  }
 
   return (
     <>
@@ -122,6 +168,8 @@ function UserJournalInput({ onSubmit }) {
                 rows="1"
                 cols="80"
                 placeholder="Title your journal entry here..."
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
             />
             <JournalText
                 rows="15"
@@ -137,13 +185,13 @@ function UserJournalInput({ onSubmit }) {
           <AnalyzeButton onClick={handleSubmit} style={{ marginTop: "1rem" }}>
             Analyze Entry
           </AnalyzeButton>
-          <ResetButton onClick={() => setEntry("")} style={{ marginTop: "1rem", marginLeft: "1rem" }}>
+          <ResetButton onClick={handleReset} style={{ marginTop: "1rem", marginLeft: "1rem" }}>
             Clear Entry
           </ResetButton>
 
           {isLoggedIn && (
             <>
-              <ResetButton onClick={handleSubmit} style={{ marginTop: "1rem", marginLeft: "1rem" }}>
+              <ResetButton onClick={handleSave} disabled={!results.length} style={{ marginTop: "1rem", marginLeft: "1rem", cursor: results.length ? "pointer" : "not-allowed", opacity: results.length ? 1 : 0.5 }}>
                 Save Entry
               </ResetButton>
             </>

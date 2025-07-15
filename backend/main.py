@@ -10,7 +10,7 @@ from transformers import pipeline
 
 from fastapi.middleware.cors import CORSMiddleware
 
-from schema import SignupRequest, LoginRequest, UserResponse
+from schema import SignupRequest, LoginRequest, UserResponse, EntryCreate, EntryOut
 from auth import verify_pwd
 from dependencies import get_current_user
 from fastapi import HTTPException
@@ -140,6 +140,23 @@ def read_current_user(current_user: User = Depends(get_current_user), db: Sessio
             } for entry in entries
         ]
     }
+
+@app.post("/user_entry", response_model=EntryOut)
+def create_journal_entry(entry: EntryCreate, db: Session = Depends(get_db), user = Depends(get_current_user)):
+    # create the new entry object out of the user's input
+    new_entry = JournalEntry(
+        title=entry.title,
+        content=entry.content,
+        mood_score = entry.mood_score,
+        user_id=user.id
+    )
+    # add the new entry to the database table
+    db.add(new_entry)
+    # commit to the database
+    db.commit()
+    db.refresh(new_entry)
+
+    return new_entry
 
 @app.post("/analyze", response_model=AnalysisResponse)
 def analyze(entry: Entry):

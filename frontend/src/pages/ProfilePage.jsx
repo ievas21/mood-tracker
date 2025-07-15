@@ -131,6 +131,16 @@ function ProfilePage() {
     fetchUser();
   }, []);
 
+  const formatToEST = (utcString) => {
+    const fixedUtcString = utcString.endsWith("Z") ? utcString : utcString + "Z";
+    const utcDate = new Date(fixedUtcString);
+    return utcDate.toLocaleString("en-US", {
+      timeZone: "America/New_York",
+      dateStyle: "medium",
+      timeStyle: "short"
+    });
+  };
+
   if (error) return <div style={{ color: 'red' }}>{error}</div>;
 
   return (
@@ -170,11 +180,7 @@ function ProfilePage() {
               <div key={entry.id} style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
                 <h3 style={{ marginBottom: '0.5rem' }}>{entry.title}</h3>
                 <p style={{ color: 'gray', fontSize: '0.9rem' }}>
-                  {new Date(entry.created_at).toLocaleDateString(undefined, {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                  })}
+                  Created At: {formatToEST(entry.created_at)}
                 </p>
               </div>
             ))

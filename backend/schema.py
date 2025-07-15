@@ -1,5 +1,7 @@
 # backend/schema.py
 from pydantic import BaseModel, EmailStr
+from datetime import datetime
+from typing import Optional
 
 # sends a request to the database to create a new user.
 class SignupRequest(BaseModel):
@@ -23,3 +25,21 @@ class UserResponse(BaseModel):
     class Config:
         # allows us to work with ORM models
         orm_mode = True
+
+# used to submit user input to the database (in user entry page)
+class EntryCreate(BaseModel):
+    title: str
+    content: str
+    mood_score: Optional[str] = None
+
+# used to display entry information to the user (in profile page)
+class EntryOut(BaseModel):
+    id: int
+    title: str
+    content: str
+    created_at: datetime
+    mood_score: Optional[str]
+
+    class Config:
+        orm_mode = True
+
