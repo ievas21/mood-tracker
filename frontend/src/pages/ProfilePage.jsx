@@ -21,7 +21,6 @@ const ProfileTitle = styled.h1`
 const ProfileSubtitle = styled.h2`
   font-size: 1.2rem;
   text-align: center;
-  margin-bottom: 1rem;
   font-weight: light;
 `;
 
@@ -42,7 +41,7 @@ const JournalEntriesContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  max-width: 600px;
+  max-width: 60%;
   background-color: rgba(199, 231, 195, 0.8);
   padding: 1rem;
   border-radius: 8px;
@@ -91,10 +90,55 @@ const JournalButton = styled.button`
 
 `;
 
+const JournalEntryCard = styled.div`
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 8px; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  width: 600px;
+
+`;
+
+const PageButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+  color: black;
+  border-radius: 12px;
+  border: none;
+  text-decoration: none;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.8rem;
+  underline: none;
+  cursor: pointer;
+  background-color:rgb(160, 194, 172);
+  transition: background-color 0.3s ease;
+  margin: 0.5rem;
+
+  &:hover {
+    background-color: rgb(207, 223, 212);
+  }
+
+  &:visited {
+    color: white;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+
+`;
+
 function ProfilePage() {
   const [user, setUser] = useState(null);
   const [error, setError] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const entriesPerPage = 3;
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -141,6 +185,12 @@ function ProfilePage() {
     });
   };
 
+const paginatedEntries = user?.entries?.slice(
+    (currentPage - 1) * entriesPerPage,
+    currentPage * entriesPerPage
+);
+const totalPages = Math.ceil(user?.entries?.length / entriesPerPage);
+
   if (error) return <div style={{ color: 'red' }}>{error}</div>;
 
   return (
@@ -176,18 +226,27 @@ function ProfilePage() {
 
         <JournalEntriesContainer>
           {user?.entries?.length > 0 ? (
-            user.entries.map((entry) => (
-              <div key={entry.id} style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+            paginatedEntries.map((entry) => (
+              <JournalEntryCard key={entry.id}>
                 <h3 style={{ marginBottom: '0.5rem' }}>{entry.title}</h3>
                 <p style={{ color: 'gray', fontSize: '0.9rem' }}>
                   Created At: {formatToEST(entry.created_at)}
                 </p>
-              </div>
+              </JournalEntryCard>
             ))
           ) : (
             <p style={{marginBottom: '1rem'}}>You have no journal entries yet.</p>
           )}
-          <JournalButton>
+          <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center', justifyContent: 'center', width: '100%' }}>
+            <PageButton onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1}>
+              Previous
+            </PageButton>
+            <span>Page {currentPage} of {totalPages}</span>
+            <PageButton onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>
+              Next
+            </PageButton>
+          </div>
+          <JournalButton style={{marginTop: '1rem'}}>
             <a href="/user_entry">Create New Entry</a>
           </JournalButton>
         </JournalEntriesContainer>
